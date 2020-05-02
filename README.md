@@ -24,3 +24,9 @@ Default output path is the video_to_audio/output
 Bugs:
 When moving files to a new destination it sometimes will name it "Youtube.mp3" I haven't found a fix for it, but it doesn't seem to affect it, if you need a correct name, just don't use the move function.
 
+# ADDED FEATURES
+
+The Vocal Folder has about the same things, but has the extra source files needed to handle the new operations.
+There is another readme.md that is in there to explain how it works.
+But just basically use the run.bat in the vocal folder and then say what song you want played, wait a bit and it should play the song
+
