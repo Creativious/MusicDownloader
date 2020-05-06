@@ -5,16 +5,60 @@ import pytube
 import ffmpeg
 from pytube import YouTube
 import requests
+from pydub import AudioSegment
+from time import sleep
 from bs4 import BeautifulSoup
 import time
 import sys
 URL = sys.argv[1]
+def convert(aPath):
+    Audio = AudioSegment.from_mp3(str(aPath))
+    adjust_jump = 8
+    segment_length = 200
+    _8d = Audio[0]
+    pan_limit = []
+    limit_left = -100
+    for i in range(100):
+        if int(limit_left) >= 100:
+            break
+        pan_limit.append(limit_left)
+        limit_left += adjust_jump
+    pan_limit.append(100)
+    for i in range(0, len(pan_limit)):
+        pan_limit[i] = pan_limit[i] / 100
+    print(len(pan_limit))
+    print(pan_limit)
+    sleep(2)
+    c = 0
+    flag = True
+    for i in range(0, len(Audio) - segment_length, segment_length):
+        peice = Audio[i:i + segment_length]
+        if c == 0 and not flag:
+            flag = True
+            c = c + 2
+        if c == len(pan_limit):
+            c = c - 2
+            flag = False
+        if flag:
+            panned = peice.pan(pan_limit[c])
+            c += 1
+        else:
+            panned = peice.pan(pan_limit[c])
+            c -= 1
+        _8d = _8d + panned
+        print(panned)
+    print(len(_8d))
+    file_name = aPath[:-3] + "_8D.mp3"
+    out_f = open(file_name, 'wb')
+    _8d.export(out_f, format='mp3')
+
 def getMusic(url):
     starter_time = round(time.time())
     temp_path = "video_to_audio/temp"
     temp_path_videos = "video_to_audio/temp/videos"
     temp_path_audio = "video_to_audio/temp/audio"
     output_path = "video_to_audio/output"
+    choice = input("8D-Ify your songs[Y/N] EXPERIMENTAL FEATURE")
     def playlist_or_not(url):
         check_string = "youtube.com/playlist"
         if check_string in str(url):
@@ -82,6 +126,8 @@ def getMusic(url):
         video_path = temp_path_videos + "/" + _filename + "mp4"
         audio_path = output_path + "/" + _filename + "mp3"
         os.system(f'ffmpeg -i "{video_path}" "{audio_path}"')
+        if choice.lower() == "y":
+            convert(audio_path)
     for video_file in video_files:
         _filename = video_file[:-3]
         video_path = temp_path_videos + "/" + _filename + "mp4"
@@ -91,3 +137,4 @@ def getMusic(url):
     return elapsed_time
 output = getMusic(URL)
 print(f"Program finished in {str(output)} seconds.")
+
