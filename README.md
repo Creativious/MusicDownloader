@@ -30,3 +30,6 @@ The Vocal Folder has about the same things, but has the extra source files neede
 There is another readme.md that is in there to explain how it works.
 But just basically use the run.bat in the vocal folder and then say what song you want played, wait a bit and it should play the song
 
+
+8D Audio
+
